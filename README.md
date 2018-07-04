@@ -104,5 +104,55 @@ that's just a guess.
 One last note here: regardless of the IDE used, every submitted project must
 still be compilable with cmake and make./
 
-## How to write a README
-A well written README file can enhance your project and portfolio.  Develop your abilities to create professional README files by completing [this free course](https://www.udacity.com/course/writing-readmes--ud777).
+## Result
+![png](./result0.png)
+![png](./result1.png)
+
+## The model
+
+The Model Predictive Controller (MPC) calculates the trajectory, actuations and sends back steering to the simulator. 
+The state vector of the vehicle is given as:
+
+```
+x - Vehicle position in forward direction
+y - Vehicle position in lateral direction
+psi - Angle of the vehicle (yaw angle)
+v - Vehicle's speed
+cte - cross-track error
+epsi - orientation error
+
+The actuators are:
+delta - Steering angle (radians)
+a - acceleration
+
+Lf - the distance between the center of mass of the vehicle and the front wheels.
+
+```
+
+The model is expressed as following:
+
+```
+x_[t+1] = x[t] + v[t] * cos(psi[t]) * dt
+y_[t+1] = y[t] + v[t] * sin(psi[t]) * dt
+psi_[t+1] = psi[t] + v[t] * delta[t] / Lf * dt
+v_[t+1] = v[t] + a[t] * dt
+cte[t+1] = f(x[t]) - y[t] + v[t] * sin(epsi[t]) * dt
+epsi[t+1] = psi[t] - psides[t] + v[t] * delta[t] / Lf * dt
+
+```
+
+## Convert Map coordinate to Car coordinate
+
+```
+dx = ptsx[i] - px;
+dy = ptsy[i] - py;
+x_car = dx * cos(psi) + dy * sin(psi);
+y_car = -dx * sin(psi) + dy * cos(psi);
+
+```
+
+## Timestep Length and Elapsed Duration (N & dt)
+The number of points(N) and the time interval(dt) are chosen by trial and error. N and dt define the prediction horizon. Finally I choose N = 10 and dt = 0.01 and it works well.
+
+
+
