@@ -109,11 +109,8 @@ int main() {
             double dx = ptsx[i] - px;
             double dy = ptsy[i] - py;
 
-            //double x_car = dx * cos(psi) + dy * sin(psi);
-            //double y_car = -dx * sin(psi) + dy * cos(psi);
-
-            double x_car = dx * cos(-psi) - dy * sin(-psi);
-            double y_car = dx * sin(-psi) + dy * cos(-psi);
+            double x_car = dx * cos(psi) + dy * sin(psi);
+            double y_car = -dx * sin(psi) + dy * cos(psi);
 
             waypoints_x_car.push_back(x_car);
             waypoints_y_car.push_back(y_car);
@@ -142,7 +139,7 @@ int main() {
           json msgJson;
           // NOTE: Remember to divide by deg2rad(25) before you send the steering value back.
           // Otherwise the values will be in between [-deg2rad(25), deg2rad(25] instead of [-1, 1].
-          msgJson["steering_angle"] = steer_value;
+          msgJson["steering_angle"] = steer_value/(deg2rad);
           msgJson["throttle"] = throttle_value;
 
           //Display the MPC predicted trajectory 
