@@ -151,6 +151,39 @@ y_car = -dx * sin(psi) + dy * cos(psi);
 
 ```
 
+## Model Predictive Control with Latency
+
+The state values are calculated using the model and the delay interval to handle actuator latency.
+
+```
+// Actuator delay in milliseconds.
+int actuatorDelay =  100;
+
+// Actuator delay in seconds.
+double delay = actuatorDelay / 1000.0;
+
+// Initial state.
+double x0 = 0;
+double y0 = 0;
+double psi0 = 0;
+double cte0 = coeffs[0];
+double epsi0 = -atan(coeffs[1]);
+
+// State after delay.
+double x_delay = x0 + (v * cos(psi0) * delay);
+double y_delay = y0 + (v * sin(psi0) * delay);
+double psi_delay = psi0 - (v * delta * delay / mpc.Lf);
+double v_delay = v + a * delay;
+double cte_delay = cte0 + (v * sin(epsi0) * delay);
+double epsi_delay = epsi0 - (v * atan(coeffs[1]) * delay / mpc.Lf);
+
+// Define the state vector.
+Eigen::VectorXd state(6);
+state << x_delay, y_delay, psi_delay, v_delay, cte_delay, epsi_delay;
+
+```
+
+
 ## Timestep Length and Elapsed Duration (N & dt)
 The number of points(N) and the time interval(dt) are chosen by trial and error. N and dt define the prediction horizon. Finally I choose N = 10 and dt = 0.01 and it works well.
 
